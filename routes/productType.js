@@ -1,17 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var conn = require('../database/connectdb');
 /* GET users listing. */
 router.get('/:id', function(req, res, next) {
 
-  var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '789852',
-    database : 'bakerry',
-    multipleStatements : true
-  });
- 
+  connection = conn();
   connection.connect();
 
   query = 'SELECT * FROM bakerry.products where id_type = ' + req.params.id + 
