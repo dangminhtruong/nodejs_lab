@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 //Routes
 
@@ -12,6 +13,8 @@ var types = require('./routes/productType');
 var users = require('./routes/users');
 var productDetails = require('./routes/product_details');
 var shopingCart = require('./routes/shopping_cart');
+
+
 var app = express();
 
 // view engine setup
@@ -24,6 +27,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret: 'no'}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);

@@ -37,8 +37,9 @@ jQuery(document).ready(function($) {
     });
 });
 
-$(document).ready(($) => {
-    $('.add-to-cart').click(() => {
+
+$(document).ready(function($){
+    $('.add-to-cart').click(function(){
         var productId = $(this).val();
         var url = '/shopping-cart/add/' + productId;
         var data = {
@@ -46,9 +47,16 @@ $(document).ready(($) => {
         };
 
         var success = (respon) => {
-            console.log(respon);
+            swal({
+                title: "Cám ơn!",
+                text: "Bạn vừa thêm một sản phẩm vào giỏ hàng!",
+                icon: "success",
+                button: "Ok",
+            });
+            $('#cartSumItem').html(respon.length);
         }
-        var dataType = 'text';
+        var dataType = 'json';
         
+        $.get(url, data, success, dataType);
     });
 });
