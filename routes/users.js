@@ -65,4 +65,10 @@ router.get('/register', (req, res) => {
   connection.end();
 });
 
+router.get('/logout', (req, res) => {
+  var sess = req.session;
+  sess.userLogin.destroy();
+  res.redirect('/');
+});
+
 module.exports = router;
