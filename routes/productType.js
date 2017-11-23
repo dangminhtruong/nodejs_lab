@@ -1,19 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var session = require('express-session');
+var conn = require('../database/connectdb');
 /* GET users listing. */
 router.get('/:id', function(req, res, next) {
 
-  var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '789852',
-    database : 'bakerry',
-    multipleStatements : true
-  });
- 
+  connection = conn();
   connection.connect();
-
+  var sess = req.session;
   query = 'SELECT * FROM bakerry.products where id_type = ' + req.params.id + 
   '; SELECT * FROM bakerry.products where promotion_price != 0 order by rand() limit 3;' +
   'SELECT * FROM bakerry.type_products;';
@@ -23,7 +18,9 @@ router.get('/:id', function(req, res, next) {
      res.render('product_types', { 
        products : result[0],
        randomProducts : result[1],
-       typesProduct : result[2]
+       typesProduct : result[2],
+       logined : sess.userLogin,
+       cartTotal : sess.shopingCart
      });
   });
   
