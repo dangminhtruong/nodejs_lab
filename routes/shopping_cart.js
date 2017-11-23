@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var session = require('express-session')
-
+var conn = require('../database/connectdb');
 /* GET users listing. */
 router.get('/remove/:id', function(req, res, next) {
   
@@ -31,8 +31,20 @@ router.get('/add/:id', (req, res, next) => {
     res.send(sess.shopingCart);
 });
 
-router.get('/show', (req, res, next) => {
-    
+router.get('/view-cart', (req, res, next) => {
+    connection = conn();
+    connection.connect();
+    var sess = req.session;
+    query = 'SELECT * FROM bakerry.type_products;';
+    connection.query(query, function (error, result, fields) {
+        if (error) throw error;
+         res.render('view_cart', { 
+            typesProduct : result,
+            logined : sess.userLogin,
+            cartTotal : sess.shopingCart
+         });
+      });
+    connection.end();
 });
 
 module.exports = router;

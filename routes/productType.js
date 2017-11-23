@@ -19,7 +19,8 @@ router.get('/:id', function(req, res, next) {
        products : result[0],
        randomProducts : result[1],
        typesProduct : result[2],
-       logined : sess.userLogin
+       logined : sess.userLogin,
+       cartTotal : sess.shopingCart
      });
   });
   

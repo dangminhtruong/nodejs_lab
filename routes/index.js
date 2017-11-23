@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var mysql      = require('mysql');
 var session = require('express-session');
 var conn = require('../database/connectdb');
 
@@ -22,7 +21,8 @@ router.get('/', function(req, res, next) {
        news : result[0],
        olds : result[1],
        typesProduct : result[2],
-       logined : sess.userLogin
+       logined : sess.userLogin,
+       cartTotal : sess.shopingCart
      });
   });
   

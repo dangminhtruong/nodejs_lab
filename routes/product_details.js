@@ -20,7 +20,8 @@ connection.query(query, function (error, result, fields) {
        typesProduct : result[0],
        product : result[1],
        randomProducts : result[2],
-       logined : sess.userLogin
+       logined : sess.userLogin,
+       cartTotal : sess.shopingCart
      });
   });
 

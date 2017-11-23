@@ -67,7 +67,7 @@ router.get('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
   var sess = req.session;
-  sess.userLogin.destroy();
+  sess.userLogin = null;
   res.redirect('/');
 });
 

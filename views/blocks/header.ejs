@@ -36,9 +36,18 @@
                 </div>
 
                 <div class="beta-comp">
-                    <div class="cart">
-                        <div class="beta-select"><i class="fa fa-shopping-cart"></i> Giỏ hàng (<b id="cartSumItem"></b>) <i class="fa fa-chevron-down"></i></div>
-                    </div> <!-- .cart -->
+                    <a href="/shopping-cart/view-cart">
+                        <div class="cart">
+                            <div class="beta-select"><i class="fa fa-shopping-cart"></i> 
+                                Giỏ hàng 
+                                <% if(typeof cartTotal !== 'undefined'){ %>
+                                    (<b id="cartSumItem"><%= cartTotal.length %></b>)
+                                <% }else{ %>
+                                    (<b id="cartSumItem">0</b>)
+                                <% } %>
+                            </div>
+                        </div> <!-- .cart -->
+                    </a>
                 </div>
             </div>
             <div class="clearfix"></div>

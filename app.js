@@ -33,6 +33,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//------Custom routng-------
 app.use('/', index);
 app.use('/users', users);
 app.use('/types', types);
