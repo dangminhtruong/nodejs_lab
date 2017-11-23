@@ -1,16 +1,8 @@
-var mysql = require('mysql');
-var session = require('express-session');
-var conn = require('../database/connectdb');
-
-var cartItems = [];
-for(i in sess.shopingCart){
-    connection.query(query, function (error, result, fields) {
-        if (error) throw error;
-         res.render('view_cart', { 
-            typesProduct : result,
-            logined : sess.userLogin,
-            cartTotal : sess.shopingCart
-         });
-      });
-    connection.end();
-}
+module.exports = (cart) => {
+    var cartItems = [];
+    for(i in cart ){
+        cartItems.push(cart[i].productId);
+    }
+    var result = cartItems.join(',');
+    return result;
+};
