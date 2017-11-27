@@ -60,3 +60,7 @@ $(document).ready(function($){
         $.get(url, data, success, dataType);
     });
 });
+
+$(document).ready(function(){
+    
+});

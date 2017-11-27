@@ -30,10 +30,9 @@
 				<table class="shop_table beta-shopping-cart-table" cellspacing="0">
 					<thead>
 						<tr>
-							<th class="product-name">Product</th>
+							<th class="product-name">Product Name</th>
 							<th class="product-price">Price</th>
 							<th class="product-quantity">Qty</th>
-							<th class="product-subtotal">Total</th>
 							<th class="product-remove">Remove</th>
 						</tr>
 					</thead>
@@ -42,30 +41,23 @@
 							<tr class="cart_item">
 								<td class="product-name">
 									<div class="media">
-										<img class="pull-left" src="/dest/images/shoping1.jpg" alt="">
+										<img class="pull-left" src='/images/product/<%= cartTotal[i].image %>' height="50px">
 										<div class="media-body">
-											<p class="font-large table-title">Men’s Belt</p>
-											<p class="table-option">Color: Red</p>
-											<p class="table-option">Size: M</p>
-											<a class="table-edit" href="#">Edit</a>
+											<p class="font-large table-title"><%= cartTotal[i].productName %></p>
 										</div>
 									</div>
 								</td>
 	
 								<td class="product-price">
-									<span class="amount">$235.00</span>
+									<span class="amount"><%= cartTotal[i].productPrice %> vnđ</span>
 								</td>
 	
 								<td class="product-quantity">
-									<input type="text" id="product-qty" style="max-width: 100px;"/>
-								</td>
-	
-								<td class="product-subtotal">
-									<span class="amount">$235.00</span>
+									<input type="text" id="product-qty" style="max-width: 100px;" value="<%= cartTotal[i].quantity %>"/>
 								</td>
 	
 								<td class="product-remove">
-									<a href="#" class="remove" title="Remove this item"><i class="fa fa-trash-o"></i></a>
+									<button class="remove" id="<%= cartTotal[i].productId %>"><i class="fa fa-trash-o"></i></button>
 								</td>
 							</tr>
 						<% } %>
