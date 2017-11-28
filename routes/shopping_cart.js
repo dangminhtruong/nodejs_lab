@@ -11,7 +11,7 @@ router.get('/add/:id', (req, res, next) => {
         if(data.promotion_price != 0 ){
             return data.promotion_price;
         }else{
-            return data[0].unit_price;
+            return data.unit_price;
         }
     };
     var checkIfExist =  (data) => {
@@ -84,12 +84,26 @@ router.get('/view-cart', (req, res, next) => {
     connection.end();
 });
 //------------------------------
-router.get('/remove/:id', function(req, res, next) {
-    
+router.get('/update', (req, res, next) => {
+    var sess = req.session;
+     for(i in sess.shopingCart){
+         if(sess.shopingCart[i].productId == req.query.id){
+             sess.shopingCart[i].quantity = req.query.qty;
+             res.send(sess.shopingCart[i].quantity);
+             break;
+         };
+    }
 });
 //------------------------------
-router.get('/update', (req, res, next) => {
-    
+router.get('/remove/:id', function(req, res, next) {
+    var sess = req.session;
+    for(i in sess.shopingCart){
+        if(sess.shopingCart[i].productId == req.params.id ){
+            sess.shopingCart.splice(i,1);
+            res.send('removed');
+            break;
+        }
+    }
 });
 //------------------------------
 module.exports = router;

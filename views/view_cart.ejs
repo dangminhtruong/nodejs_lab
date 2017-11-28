@@ -38,7 +38,7 @@
 					</thead>
 					<tbody>
 						<% for(i in cartTotal) { %>
-							<tr class="cart_item">
+							<tr class="cart_item" id="item<%= cartTotal[i].productId %>">
 								<td class="product-name">
 									<div class="media">
 										<img class="pull-left" src='/images/product/<%= cartTotal[i].image %>' height="50px">
@@ -47,33 +47,30 @@
 										</div>
 									</div>
 								</td>
-	
 								<td class="product-price">
 									<span class="amount"><%= cartTotal[i].productPrice %> vnđ</span>
 								</td>
-	
 								<td class="product-quantity">
-									<input type="text" id="product-qty" style="max-width: 100px;" value="<%= cartTotal[i].quantity %>"/>
+									<div class="form-group has-success has-feedback" style="max-width: 100px;">
+										<label class="control-label" for="inputSuccess2"></label>
+										<input type="text" class="form-control cart_update" id="<%= cartTotal[i].productId %>" value="<%= cartTotal[i].quantity %>"/>
+										<span class="form-control-feedback loader"><img src="/images/etc/loader.gif" ></span>
+									</div>
 								</td>
-	
 								<td class="product-remove">
-									<button class="remove" id="<%= cartTotal[i].productId %>"><i class="fa fa-trash-o"></i></button>
+									<button class="cart_remove" value="<%= cartTotal[i].productId %>"><i class="fa fa-trash-o"></i></button>
 								</td>
 							</tr>
 						<% } %>
 					</tbody>
-
 					<tfoot>
 						<tr>
-							<td colspan="6" class="actions">
-							</td>
+							<td colspan="6" class="actions"></td>
 						</tr>
 					</tfoot>
 				</table>
 				<!-- End of Shop Table Products -->
 			</div>
-
-
 			<!-- Cart Collaterals -->
 			<div class="cart-collaterals">
 				<!-- <form class="shipping_calculator pull-left" action="#" method="post">
