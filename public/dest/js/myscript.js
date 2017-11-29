@@ -110,3 +110,30 @@ $(document).ready(($) => {
         });
     });
 });
+
+$(document).ready(function($){
+    $('#submit_payment').click(function() {
+        var ten_kh = $('#customer_name').val();
+        var dia_chi_kh = $('#customer_address').val();
+        var so_dt_kh = $('#customer_phone').val();
+        var email_kh = $('#customer_email').val();
+        var hinh_thuc_thanh_toan = $('#form-thanh-toan select[name=customer_payment]').val()
+        var gioi_tinh_kh = $('#form-thanh-toan input[name=customer_gender]:checked').val();
+        var ghi_chu_don_hang = $('#customer_note').val();
+        var url = '/shopping-cart/payment';
+        var data = {
+            name : ten_kh,
+            address : dia_chi_kh,
+            phone : so_dt_kh,
+            email : email_kh,
+            payment : hinh_thuc_thanh_toan,
+            gender : gioi_tinh_kh,
+            note : ghi_chu_don_hang
+        }
+        var success = function(respon) {
+            console.log(respon);
+        }
+        var dataType = 'text';
+       $.get(url, data, success, dataType);
+    });
+});
