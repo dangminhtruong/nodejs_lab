@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var session = require('express-session')
 var conn = require('../database/connectdb');
+var summary = require('../helpers/cart_sumary');
+var addCustomer = require('../helpers/save_customer');
+var saveBill = require('../helpers/save_bills');
+var moment = require('moment');
 /* GET users listing. */
 //------------------------------
 router.get('/add/:id', (req, res, next) => {
@@ -79,6 +83,7 @@ router.get('/view-cart', (req, res, next) => {
              typesProduct : result,
              logined : sess.userLogin,
              cartTotal : sess.shopingCart,
+             sum : summary(sess.shopingCart)
           });
        });
     connection.end();
@@ -104,6 +109,28 @@ router.get('/remove/:id', function(req, res, next) {
             break;
         }
     }
+});
+//------------------------------
+router.get('/payment', (req, res) => {
+    var sess = req.session;
+    addCustomer(req.query, function(customerId){
+        connection = conn();
+        connection.connect();
+        var today = moment(new Date()).format("YYYY/MM/DD");
+        var sql = "INSERT INTO bakerry.bills (id_customer, date_order, total, payment, note, status)" + 
+                  " VALUES (" + "'" + customerId + " ',' " + today + " '," 
+                  + summary(sess.shopingCart) + ",' " + 'Khi giao hang' + "','" + 'khong' + "','" + 'Dang cho' + "'"+ ");";
+        console.log('Cau truy van', sql);
+        connection.query(sql, (error, results, fields) => {
+            if(error) throw error;
+            console.log('addbill');
+            console.log(results.insertId);
+           // return callback(results.insertId);
+        });
+    
+        connection.end();
+    });
+    res.send('successfull');
 });
 //------------------------------
 module.exports = router;

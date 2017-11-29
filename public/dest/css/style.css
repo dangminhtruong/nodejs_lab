@@ -3160,7 +3160,7 @@ position:relative
 }
 
 .cart-totals {
-width:270px;
+min-width:300px;
 text-align:center;
 border:1px solid #e8e8e8;
 margin-top:25px
@@ -5203,3 +5203,6 @@ border:none;}
 .beta-rotator {font-family: "Open Sans",sans-serif;}
 .history-slider span {font-family: "Open Sans",sans-serif;}
 
+#normal_checkout{
+    margin-top: 6px;
+}
