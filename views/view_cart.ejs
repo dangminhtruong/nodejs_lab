@@ -8,6 +8,71 @@
 </head>
 <body>
 	<%- include('blocks/header') %>
+	<!---------------MODAL------------>
+	<div class="modal fade" id="datHangThanhCong" role="dialog">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header well">
+			  <h4 class="modal-title"><strong>Đặt hàng thành công !</strong></h4>
+			</div>
+			<div class="modal-body" id="thongTinDonHang">
+				<div class="col-md-6">
+					<div class="col-md-12">
+						Họ tên : <i id="tenKhHd"></i>
+					</div>
+					<div class="col-md-12">
+						Địa chỉ : <i id="diaChiKhHd"></i>
+					</div>
+					<div class="col-md-12">
+						Số điện thoại : <i id="soDtKhHd"></i>
+					</div>
+					<div class="col-md-12">
+						Email : <i id="emailKhHd"></i>
+					</div>
+					<div class="col-md-12">
+						Hình thức thanh toán: <i id="cachThanhToanHd"></i>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="col-md-12">
+						 <div class="col-md-12">
+								 <table class="table">
+								  <thead>
+									<tr>
+									  <th>Tên sản phẩm </th>
+									  <th>Số Lượng</th>
+									  <th>Đơn giá</th>
+									</tr>
+								  </thead>
+								  <tbody id="item_payment_table">
+								 
+								  </tbody>
+							</table>
+						 </div>
+					  <div class="col-md-12">
+						  <div class="col-md-4">
+  
+						  </div>
+						  <div class="col-md-5">
+							Tổng thanh toán :
+						  </div>
+						  <div class="col-md-3">
+							<i id="tongThanhToanHD"></i><u> vnđ</u>
+						  </div>
+					  </div>
+					</div>
+				</div>
+				<div class="col-md-12" id="loiCamOn">
+					<strong>Cảm ơn bạn đã ủng hộ cửa hàng chúng tôi. Sản phẩm sẽ sớm được chuyển đến bạn...</strong>
+				</div>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-default" id="closeDatHangThanhCong">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	<!-------------------------------->
 	<div class="inner-header">
 		<div class="container">
 			<div class="pull-left">
