@@ -113,24 +113,64 @@ router.get('/remove/:id', function(req, res, next) {
 //------------------------------
 router.get('/payment', (req, res) => {
     var sess = req.session;
-    addCustomer(req.query, function(customerId){
+    new Promise(function(resolve, reject) {
         connection = conn();
         connection.connect();
-        var today = moment(new Date()).format("YYYY/MM/DD");
-        var sql = "INSERT INTO bakerry.bills (id_customer, date_order, total, payment, note, status)" + 
-                  " VALUES (" + "'" + customerId + " ',' " + today + " '," 
-                  + summary(sess.shopingCart) + ",' " + 'Khi giao hang' + "','" + 'khong' + "','" + 'Dang cho' + "'"+ ");";
-        console.log('Cau truy van', sql);
+        sql = "INSERT INTO bakerry.customer (name, gender, email, address, phone_number) " + 
+        "VALUES ( " + " ' " + req.query.name + " ' " + ",' " + req.query.gender + " ',' " + req.query.email + " ',' " + req.query.address + " ',' " + req.query.phone + " '); ";
+        connection.query(sql, (error, result) => {
+            if(error){
+                console.log(err);
+                reject(err);
+            };
+            resolve(result.insertId);
+        });
+        connection.end();
+    }).then(function(userId){
+        return new Promise((resolve, reject) => {
+            connection = conn();
+            connection.connect();
+            var today = moment(new Date()).format("YYYY/MM/DD");
+        
+            var sql = "INSERT INTO bakerry.bills (id_customer, date_order, total, payment, note, status)" + 
+                      " VALUES (" + "'" + userId + " ',' " + today + " '," 
+                      + summary(sess.shopingCart) + ",' " + req.query.payment + "','" + req.query.note + "','" + 'Dang cho' + "'"+ ");";
+            connection.query(sql, (error, results, fields) => {
+                if(error){
+                    reject(error);
+                };
+                resolve(results.insertId);
+            });
+            connection.end();
+        });
+    }).then((billId) => {
+        return new Promise((resolve, reject) => {
+            for(i in sess.shopingCart){
+                connection = conn();
+                connection.connect();
+                let sql = "INSERT INTO bakerry.bill_detail (id_bill, id_product, quantity, unit_price) VALUES ( " + 
+                billId + "," + sess.shopingCart[i].productId + "," + sess.shopingCart[i].quantity  +  "," + sess.shopingCart[i].productPrice + ")";
+                connection.query(sql, (error, results, fields) => {
+                    if(error){
+                        reject();
+                    }
+                });
+                connection.end();
+            }
+            resolve(billId);
+        });
+    }).then((billId) => {
+        connection = conn();
+        connection.connect();
+        let sql = "SELECT * FROM bakerry.bill_detail WHERE id_bill = " + billId;
         connection.query(sql, (error, results, fields) => {
             if(error) throw error;
-            console.log('addbill');
-            console.log(results.insertId);
-           // return callback(results.insertId);
+            res.send(results);
         });
-    
         connection.end();
+    }).catch((error) => {
+        console.log(error);
     });
-    res.send('successfull');
 });
 //------------------------------
 module.exports = router;

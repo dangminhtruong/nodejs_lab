@@ -132,8 +132,20 @@ $(document).ready(function($){
         }
         var success = function(respon) {
             console.log(respon);
+            let tbody = '';
+            for(i in respon){
+                tbody += '<tr><td>Lalaland</td><td>'+ respon[i].quantity + '</td><td>' + respon[i].unit_price + 'vnđ</td></tr>';
+            }
+            $('#tenKhHd').html(ten_kh);
+            $('#diaChiKhHd').html(dia_chi_kh);
+            $('#soDtKhHd').html(soDtKhHd);
+            $('#emailKhHd').html(email_kh);
+            $('#cachThanhToanHd').html(hinh_thuc_thanh_toan);
+            $('#item_payment_table').append(tbody);
+            $('#datHangThanhCong').modal('show');
         }
-        var dataType = 'text';
-       $.get(url, data, success, dataType);
+        var dataType = 'json';
+        console.log(data);
+        $.get(url, data, success, dataType);
     });
 });
