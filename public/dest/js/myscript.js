@@ -75,9 +75,14 @@ $(document).ready(function($){
             qty : quantity
         };
         var success = function(respon){
-            setTimeout(function(){  $('.loader').hide(); }, 300);
+            console.log(respon);
+            setTimeout(function(){
+                  $('.loader').hide(); 
+            }, 300);
+            $('#signle_total' + productId).html(respon.newTotalPrice);
+            $('#cart_summary').html(respon.newCartTotal + 'vnđ');
         };
-        var dataType = 'text';
+        var dataType = 'json';
         $.get(url, data, success, dataType);
     });
 });

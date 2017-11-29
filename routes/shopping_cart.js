@@ -91,13 +91,23 @@ router.get('/view-cart', (req, res, next) => {
 //------------------------------
 router.get('/update', (req, res, next) => {
     var sess = req.session;
+    var newPrice = null;
+    var newTotal = 0;
      for(i in sess.shopingCart){
          if(sess.shopingCart[i].productId == req.query.id){
              sess.shopingCart[i].quantity = req.query.qty;
-             res.send(sess.shopingCart[i].quantity);
+             newPrice = sess.shopingCart[i].quantity * sess.shopingCart[i].productPrice;
              break;
          };
     }
+    for(i in sess.shopingCart){
+        newTotal += sess.shopingCart[i].quantity *  sess.shopingCart[i].productPrice;
+    }
+    responData = {
+        newCartTotal : newTotal,
+        newTotalPrice : newPrice
+    };
+    res.send(responData);
 });
 //------------------------------
 router.get('/remove/:id', function(req, res, next) {

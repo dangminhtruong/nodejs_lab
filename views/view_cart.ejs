@@ -124,7 +124,7 @@
 									</div>
 								</td>
 								<td class="product-price">
-									<span class="amount"><%= cartTotal[i].productPrice * cartTotal[i].quantity %> vnđ</span>
+									<span class="amount"><span id="signle_total<%= cartTotal[i].productId %>"><%= cartTotal[i].productPrice * cartTotal[i].quantity %></span> vnđ</span>
 								</td>
 								<td class="product-remove">
 									<button class="cart_remove" value="<%= cartTotal[i].productId %>"><i class="fa fa-trash-o"></i></button>
@@ -190,7 +190,7 @@
 				</div>
 				<div class="cart-totals col-md-4 pull-right">
 					<div class="cart-totals-row"><h5 class="cart-total-title">Cart Totals</h5></div>
-					<div class="cart-totals-row"><span>Cart Subtotal:</span> <span><%= sum %> vnđ</span></div>
+					<div class="cart-totals-row"><span>Cart Subtotal:</span> <span id="cart_summary"><%= sum %> vnđ</span></div>
 					<div class="cart-totals-row"><span>Shipping:</span> <span>Free Shipping</span></div>
 					<% if(typeof logined !== 'undefined'){ %>
 						<div class="cart-totals-row" style="text-align: center"><a href="/users/login"><button class="btn btn-primary" id="user_checkout">Checkout</button></a></div>
