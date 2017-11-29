@@ -162,9 +162,11 @@ router.get('/payment', (req, res) => {
     }).then((billId) => {
         connection = conn();
         connection.connect();
-        let sql = "SELECT * FROM bakerry.bill_detail WHERE id_bill = " + billId;
+        let sql = "SELECT products.name as productname, bill_detail.quantity, bill_detail.unit_price FROM bakerry.bill_detail " + 
+        "INNER JOIN bakerry.products ON (bill_detail.id_product = products.id) WHERE id_bill = " + billId;
         connection.query(sql, (error, results, fields) => {
             if(error) throw error;
+            sess.shopingCart = undefined;
             res.send(results);
         });
         connection.end();
