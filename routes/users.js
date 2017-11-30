@@ -21,20 +21,19 @@ router.get('/login', function(req, res, next) {
         typesProduct: result
       });
     });
-
-
     connection.end();
 });
 
 router.post('/login', urlencodedParser, (req, res) => {
   connection = conn();
   connection.connect();
-  query = "SELECT * FROM bakerry.users WHERE email = '" + req.body.userEmail + "'  AND password = '" + req.body.userPass + " ' " + 
+  query = "SELECT count(*) as confirm, full_name FROM bakerry.users WHERE email = '" + req.body.userEmail + "'  AND password = '" + req.body.userPass + "'" + 
   '; SELECT * FROM bakerry.type_products';
 
   connection.query(query, function (error, result, fields) {
     if (error) throw error;
-    if(result[0].length > 0 ){
+    console.log('query result: ',result[0][0]);
+    if(result[0][0].confirm !== 0 ){
       var sess = req.session;
       sess.userLogin = result[0][0].full_name;
       res.redirect('/');
@@ -60,6 +59,23 @@ router.get('/register', (req, res) => {
     if (error) throw error;
     res.render('register', {
       typesProduct :  result
+    });
+  });
+  connection.end();
+});
+
+router.post('/register', urlencodedParser,(req, res) => {
+  connection = conn();
+  connection.connect();
+  sql = "SELECT * FROM bakerry.type_products;" + 
+        "INSERT INTO bakerry.users (full_name, email, password, phone, address, user_rights) " + 
+        "VALUES('" + req.body.userFullName + "','" + req.body.userEmail + "','" + req.body.userPass + 
+        "','" + req.body.userPhone + "','" + req.body.userAddress + "',0);";
+  connection.query(sql, (error, results, fields) => {
+    if(error) throw error;
+    res.render('login', {
+      typesProduct : results[0],
+      registerSucces : 'Register successfull !'
     });
   });
   connection.end();

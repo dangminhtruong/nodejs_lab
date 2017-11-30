@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var session = require('express-session')
+var session = require('express-session');
+var fs = require("fs");
+var ejs = require("ejs");
+var nodemailer = require('nodemailer');
 var conn = require('../database/connectdb');
 var summary = require('../helpers/cart_sumary');
 var addCustomer = require('../helpers/save_customer');
@@ -91,13 +94,23 @@ router.get('/view-cart', (req, res, next) => {
 //------------------------------
 router.get('/update', (req, res, next) => {
     var sess = req.session;
+    var newPrice = null;
+    var newTotal = 0;
      for(i in sess.shopingCart){
          if(sess.shopingCart[i].productId == req.query.id){
              sess.shopingCart[i].quantity = req.query.qty;
-             res.send(sess.shopingCart[i].quantity);
+             newPrice = sess.shopingCart[i].quantity * sess.shopingCart[i].productPrice;
              break;
          };
     }
+    for(i in sess.shopingCart){
+        newTotal += sess.shopingCart[i].quantity *  sess.shopingCart[i].productPrice;
+    }
+    responData = {
+        newCartTotal : newTotal,
+        newTotalPrice : newPrice
+    };
+    res.send(responData);
 });
 //------------------------------
 router.get('/remove/:id', function(req, res, next) {
@@ -117,7 +130,7 @@ router.get('/payment', (req, res) => {
         connection = conn();
         connection.connect();
         sql = "INSERT INTO bakerry.customer (name, gender, email, address, phone_number) " + 
-        "VALUES ( " + " ' " + req.query.name + " ' " + ",' " + req.query.gender + " ',' " + req.query.email + " ',' " + req.query.address + " ',' " + req.query.phone + " '); ";
+        "VALUES (" + "'" + req.query.name + "'" + ",'" + req.query.gender + "','" + req.query.email + "','" + req.query.address + "','" + req.query.phone + "');";
         connection.query(sql, (error, result) => {
             if(error){
                 console.log(err);
@@ -133,8 +146,8 @@ router.get('/payment', (req, res) => {
             var today = moment(new Date()).format("YYYY/MM/DD");
         
             var sql = "INSERT INTO bakerry.bills (id_customer, date_order, total, payment, note, status)" + 
-                      " VALUES (" + "'" + userId + " ',' " + today + " '," 
-                      + summary(sess.shopingCart) + ",' " + req.query.payment + "','" + req.query.note + "','" + 'Dang cho' + "'"+ ");";
+                      " VALUES (" + "'" + userId + "','" + today + "'," 
+                      + summary(sess.shopingCart) + ",'" + req.query.payment + "','" + req.query.note + "','" + 'Dang cho' + "'"+ ");";
             connection.query(sql, (error, results, fields) => {
                 if(error){
                     reject(error);
@@ -160,16 +173,47 @@ router.get('/payment', (req, res) => {
             resolve(billId);
         });
     }).then((billId) => {
+       return new Promise((resolve, reject) => {
         connection = conn();
         connection.connect();
         let sql = "SELECT products.name as productname, bill_detail.quantity, bill_detail.unit_price FROM bakerry.bill_detail " + 
         "INNER JOIN bakerry.products ON (bill_detail.id_product = products.id) WHERE id_bill = " + billId;
         connection.query(sql, (error, results, fields) => {
-            if(error) throw error;
-            sess.shopingCart = undefined;
-            res.send(results);
+            if(error){
+                reject(error);
+            };
+            resolve(results, billId);
         });
         connection.end();
+       });
+    }).then((resData, billId) => {
+        sess.shopingCart = undefined;
+        /*--------------TESTING NODE MAILLER--------------*/
+        var transporter =  nodemailer.createTransport({ 
+            service: 'Gmail',
+            auth: {
+                user: 'xxdangminhtruongxx@gmail.com',
+                pass: '01292007776'
+            }
+        });
+        var mainOptions = { 
+            from: 'Alleybakery',
+            to: 'xdangminhtruongx@gmail.com',
+            subject: 'Thư xác nhận đơn hàng',
+            text: 'You recieved message from alleybakery',
+            html: ejs.render(__dirname + 'views/mails/confirm_order.ejs')
+        }
+        transporter.sendMail(mainOptions, function(err, info){
+            if (err) {
+                console.log(err);
+               // res.redirect('/');
+            } else {
+                console.log('Message sent: ' +  info.response);
+               // res.redirect('/');
+            }
+        });
+        /*------------------------------------------------*/
+        res.send(resData);
     }).catch((error) => {
         console.log(error);
     });
