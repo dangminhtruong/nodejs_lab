@@ -188,7 +188,8 @@ router.get('/payment', (req, res) => {
        });
     }).then((resData, billId) => {
         sess.shopingCart = undefined;
-        /*--------------TESTING NODE MAILLER--------------*/
+        res.send(resData);
+        /*--------------TESTING NODE MAILLER--------------
         var transporter =  nodemailer.createTransport({ 
             service: 'Gmail',
             auth: {
@@ -212,8 +213,7 @@ router.get('/payment', (req, res) => {
                // res.redirect('/');
             }
         });
-        /*------------------------------------------------*/
-        res.send(resData);
+        ------------------------------------------------*/
     }).catch((error) => {
         console.log(error);
     });

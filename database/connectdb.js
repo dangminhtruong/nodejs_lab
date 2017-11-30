@@ -9,5 +9,4 @@ var conn = function() {
       });
     return connection;
 }
-
 module.exports = conn;
