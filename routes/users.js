@@ -27,7 +27,7 @@ router.get('/login', function(req, res, next) {
 router.post('/login', urlencodedParser, (req, res) => {
   connection = conn();
   connection.connect();
-  query = "SELECT count(*) as confirm, full_name FROM bakerry.users WHERE email = '" + req.body.userEmail + "'  AND password = '" + req.body.userPass + "'" + 
+  query = "SELECT count(*) as confirm, full_name, id FROM bakerry.users WHERE email = '" + req.body.userEmail + "'  AND password = '" + req.body.userPass + "'" + 
   '; SELECT * FROM bakerry.type_products';
 
   connection.query(query, function (error, result, fields) {
@@ -35,7 +35,10 @@ router.post('/login', urlencodedParser, (req, res) => {
     console.log('query result: ',result[0][0]);
     if(result[0][0].confirm !== 0 ){
       var sess = req.session;
-      sess.userLogin = result[0][0].full_name;
+      sess.userLogin = {
+        userName : result[0][0].full_name,
+        userId : result[0][0].id
+      };
       res.redirect('/');
     }else{
       res.render('login', {
@@ -85,6 +88,22 @@ router.get('/logout', (req, res) => {
   var sess = req.session;
   sess.userLogin = undefined;
   res.redirect('/');
+});
+
+router.get('/profile', (req, res) => {
+  connection = conn();
+  connection.connect();
+  var sess = req.session;
+  sql = "SELECT * FROM bakerry.type_products;" + 
+        "SELECT full_name, email, phone, address, avata FROM bakerry.users where id = " + sess.userLogin.userId;
+  connection.query(sql, (error, results, fields ) => {
+    res.render('profile', {
+      typesProduct : results[0],
+      userInfo : results[1][0]
+    });
+    console.log(results[1][0]);
+  });
+  connection.end();
 });
 
 module.exports = router;
