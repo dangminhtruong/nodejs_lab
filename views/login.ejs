@@ -29,6 +29,12 @@
 						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Failer ! </strong> <%= loginErrors %>
                 </div>
+			<% } %>
+			<% if(typeof registerSucces !== 'undefined') { %>
+                <div class="alert alert-success alert-dismissable fade in">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong>Success!</strong> You just regiter sucessfull.
+				</div>
             <% } %>
 			<form action="/users/login" method="post" class="beta-form-checkout">
 				<div class="row">
