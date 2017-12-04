@@ -15,8 +15,6 @@ router.get('/login', function(req, res, next) {
     query = 'SELECT * FROM bakerry.type_products;';
     connection.query(query, function (error, result, fields) {
       if (error) throw error;
-      console.log('The solution is: ', result[0].solution);
-
       res.render('login', {
         typesProduct: result
       });
@@ -32,7 +30,6 @@ router.post('/login', urlencodedParser, (req, res) => {
 
   connection.query(query, function (error, result, fields) {
     if (error) throw error;
-    console.log('query result: ',result[0][0]);
     if(result[0][0].confirm !== 0 ){
       var sess = req.session;
       sess.userLogin = {
@@ -99,11 +96,85 @@ router.get('/profile', (req, res) => {
   connection.query(sql, (error, results, fields ) => {
     res.render('profile', {
       typesProduct : results[0],
-      userInfo : results[1][0]
+      userInfo : results[1][0],
+      logined : sess.userLogin
     });
-    console.log(results[1][0]);
   });
   connection.end();
+});
+
+router.post('/update-infor',urlencodedParser, (req, res) => {
+  connection = conn();
+  connection.connect();
+  var sess = req.session;
+  let sql = "UPDATE bakerry.users SET full_name ='" + req.body.edit_name + 
+            "',email ='" + req.body.edit_email + "',phone ='" + req.body.edit_phone + 
+            "',address='" + req.body.edit_address + "' WHERE id=" + sess.userLogin.userId;
+  connection.query(sql, (error, results) => {
+    if(error) throw error;
+    res.redirect('/users/profile');
+  });
+  connection.end();
+});
+
+router.post('/update-password', urlencodedParser, (req, res) => {
+  var sess = req.session;
+  new Promise((resolve, reject) => {
+    connection = conn();
+    connection.connect();
+    let sql = "SELECT count(*) as num FROM bakerry.users WHERE password=" + req.body.current_pass + 
+              " AND id=" + sess.userLogin.userId;
+    connection.query(sql, (error, results) => {
+        if(error){
+          reject(error);
+        }else{
+          resolve(results);
+        }
+    });
+    connection.end();
+  }).then((results) => {
+    if(results[0].num == 1 && req.body.new_pass === req.body.re_new_pass){
+      connection = conn();
+      connection.connect();
+      let sql = "SELECT * FROM bakerry.type_products;" + 
+      "SELECT full_name, email, phone, address, avata FROM bakerry.users where id = " + sess.userLogin.userId +   
+      "; UPDATE bakerry.users SET password = " + req.body.new_pass + " WHERE id = " + sess.userLogin.userId;
+      connection.query(sql, (error, results) => {
+        if(error) throw error;
+        res.render('profile', {
+          typesProduct : results[0],
+          userInfo : results[1][0],
+          logined : sess.userLogin,
+          alert : {
+            type : "success",
+            content : "Update pasword successfull"
+          }
+        });
+      });
+      connection.end();
+    }else{
+      connection = conn();
+      connection.connect();
+      let sql = "SELECT * FROM bakerry.type_products;" + 
+      "SELECT full_name, email, phone, address, avata FROM bakerry.users where id = " + sess.userLogin.userId;
+      connection.query(sql, (error, results) => {
+        if(error) throw error;
+        res.render('profile', {
+          typesProduct : results[0],
+          userInfo : results[1][0],
+          logined : sess.userLogin,
+          alert : {
+            type : "danger",
+            content : "Update pasword failer"
+          }
+        });
+      });
+      connection.end();
+      res.redirect('back');
+    }
+  }).catch((error)=>{
+    console.log(error);
+  });
 });
 
 module.exports = router;

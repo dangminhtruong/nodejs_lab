@@ -1,6 +1,6 @@
 var conn = require('../database/connectdb');
 var tada = null;
-module.exports = (sql) => {
+module.exports = (sql,sess, req, res) => {
     connection = conn();
     connection.connect();
     connection.query(sql, (error, result, fields) => {
