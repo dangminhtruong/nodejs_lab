@@ -213,10 +213,15 @@ router.get('/payment', (req, res) => {
                // res.redirect('/');
             }
         });
+    
         ------------------------------------------------*/
     }).catch((error) => {
         console.log(error);
     });
+});
+
+router.get('login-payment', (req, res) => {
+    
 });
 //------------------------------
 module.exports = router;

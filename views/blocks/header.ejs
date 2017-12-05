@@ -10,7 +10,7 @@
             <div class="pull-right auto-width-right">
                 <ul class="top-details menu-beta l-inline">
                     <% if(typeof logined !== 'undefined') { %>
-                        <li><a href="#"><i class="fa fa-user"></i><%= logined %></a></li>
+                        <li><a href="/users/profile"><i class="fa fa-user"></i><%= logined.userName %></a></li>
                         <li><a href="/users/logout">Đăng xuất</a></li>
                     <% }else{ %>
                         <li><a href="/users/register">Đăng kí</a></li>
