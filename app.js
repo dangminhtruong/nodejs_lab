@@ -14,7 +14,8 @@ var types = require('./routes/productType');
 var users = require('./routes/users');
 var productDetails = require('./routes/product_details');
 var shopingCart = require('./routes/shopping_cart');
-
+//Admin routes
+var admin_panel = require('./routes/admin/index');
 
 var app = express();
 
@@ -40,7 +41,7 @@ app.use('/users', users);
 app.use('/types', types);
 app.use('/products/detail', productDetails);
 app.use('/shopping-cart/', shopingCart);
-
+app.use('/admin/', admin_panel);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

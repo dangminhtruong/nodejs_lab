@@ -160,3 +160,9 @@ $(document).ready(function($){
         $.get(url, data, success, dataType);
     });
 });
+
+$(document).ready(function() {
+    $('#user_checkout').click(function(){
+        
+    });
+});

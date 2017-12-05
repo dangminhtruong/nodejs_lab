@@ -219,5 +219,9 @@ router.get('/payment', (req, res) => {
         console.log(error);
     });
 });
+
+router.get('login-payment', (req, res) => {
+    
+});
 //------------------------------
 module.exports = router;
